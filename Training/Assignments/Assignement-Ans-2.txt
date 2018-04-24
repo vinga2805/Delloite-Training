@@ -1,0 +1,10 @@
+#docker container run -it rm cents:7 bash
+
+Yum update curl
+Curl --version
+
+#docker container run it --rm ubuntu:14.04 bash
+
+Apt-get update 
+Apt-get install curl
+Curl --version

@@ -1,0 +1,4 @@
+docker container run -d --name web1 --network my_net --net-alias search elasticsearch:2
+docker container run -d --name web2 --network my_net --net-alias search elasticsearch:2
+docker container run -it --rm --network my_net alpine nslookup search
+docker container run -it --rm --network my_net centos curl -s search:9200
