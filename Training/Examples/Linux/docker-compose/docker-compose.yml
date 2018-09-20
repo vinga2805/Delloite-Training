@@ -5,7 +5,7 @@ version: '2'
 
 services:
   jekyll:
-    image: bretfisher/jekyll-serve
+    image: vinga2805/jekyll-serve
     volumes:
       - .:/site
     ports:
