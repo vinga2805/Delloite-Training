@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: captain-controller
+spec:
+  replicas: 2
+  selector:
+    app: captain-clap
+  template:
+    metadata:
+      labels:
+        app: captain-clap 
+    spec:
+      containers:
+      - name: k8s-demo
+        image: vinga2805/mynodejsapp 
+        ports:
+        - name: nodejs-port
+          containerPort: 3000

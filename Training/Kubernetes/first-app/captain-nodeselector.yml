@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: captain-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: captain-clap 
+    spec:
+      containers:
+      - name: k8s-demo
+        image: vinga2805/mynodejsapp 
+        ports:
+        - name: nodejs-port
+          containerPort: 3000
+      nodeSelector:
+        name: slave1 

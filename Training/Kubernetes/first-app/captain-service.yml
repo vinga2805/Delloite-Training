@@ -8,5 +8,5 @@ spec:
     targetPort: nodejs-port
     protocol: TCP
   selector:
-    app: captain-clapp 
+    app: captain-clap
   type: LoadBalancer
