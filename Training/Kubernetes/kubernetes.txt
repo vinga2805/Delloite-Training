@@ -1,0 +1,43 @@
+Replication_controller:
+=======================
+
+kubectl get rc
+kubectl describe rc/<>
+kubectl scale --replias=4 rc/<>
+
+Deployments:
+=================
+kubectl get deployments
+kubectl get rs
+kubectl get pods
+kubectl rollout status deployment/<>
+kubectl set image deployment/<> nginx:1=nginx:2
+kubectl edit deployment/<>
+kubectl rollout history deployment/<>
+kubectl rollout undo deployment/<>
+kubectl rollout undo deployment/<> --to-revision=n
+
+Nodeport can work only from 30000 to 32767
+
+
+How to run a pod on a specific node:
+====================================
+
+kubectl label nodes node1 hardware=high-spec
+kubectl label nodes node2 hardware=low-spec
+
+
+kubectl lable nodes node1 name:slave1
+
+Add node selector in pod defination
+
+nodeSelector:
+   hardware: high-spec
+   
+   
+Secrets:
+========
+
+echo -n "root" > ./user.txt
+echo -n "password" > ./pass.txt
+kubectl create secret generic db-user-pass --from-file=./user.txt --from-file=./pass.txt
