@@ -20,7 +20,7 @@
     - key/value storage for incoming votes
     - no public ports
     - on frontend network
-    - 1 replica NOTE VIDEO SAYS TWO BUT ONLY ONE NEEDED
+    - 1 replica
 
 - worker
     - dockersamples/examplevotingapp_worker
