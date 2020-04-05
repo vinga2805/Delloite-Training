@@ -16,6 +16,9 @@ services:
         condition: on-failure
   db:
     image: postgres:9.4
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
@@ -32,7 +35,7 @@ services:
     depends_on:
       - redis
     deploy:
-      replicas: 3 
+      replicas: 1
       update_config:
         parallelism: 2
       restart_policy:
@@ -58,6 +61,9 @@ services:
     networks:
       - frontend
       - backend
+    depends_on:
+      - db
+      - redis
     deploy:
       mode: replicated
       replicas: 1
@@ -67,17 +73,6 @@ services:
         delay: 10s
         max_attempts: 3
         window: 120s
-      placement:
-        constraints: [node.role == manager]
-
-  visualizer:
-    image: dockersamples/visualizer
-    ports:
-      - "8080:8080"
-    stop_grace_period: 1m30s
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    deploy:
       placement:
         constraints: [node.role == manager]
 
