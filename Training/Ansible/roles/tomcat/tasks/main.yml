@@ -1,0 +1,67 @@
+---
+- name: Install dependencies
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+      - default-jdk
+      - unzip
+- name: Create group
+  ansible.builtin.group:
+    name: tomcat
+- name: Create tomcat user
+  user:
+    name: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    shell: /bin/false
+    home: /opt/tomcat
+- name: Download and unzip the tomcat
+  ansible.builtin.unarchive:
+    src: "{{ tomcat_download_url }}"
+    dest: /tmp
+    remote_src: true
+- name: Move tomcat to /opt/tomcat
+  command: mv /tmp/apache-tomcat-8.5.61 /opt/tomcat
+  ignore_errors: true
+- name: Create soft link
+  ansible.builtin.file:
+    src: /opt/tomcat/apache-tomcat-8.5.61
+    dest: /opt/tomcat/latest
+    state: link
+- name: Change the ownership to tomcat
+  ansible.builtin.file:
+    path: /opt/tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    state: directory
+    mode: '0755'
+    recurse: yes
+- name: Copy tomcat.service file from ansible server
+  template:
+    src: tomcat.service.j2
+    dest: /etc/systemd/system/tomcat.service
+- name: Reload Daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+- name: Start tomcat
+  ansible.builtin.service:
+    name: tomcat
+    state: started
+- name: finding the status of tomcat
+  command: service tomcat status
+  register: tomcat_status
+- debug:
+    var: tomcat_status.stdout
+- name: Download the sample app
+  get_url:
+    url: https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war
+    dest: /opt/tomcat/latest/webapps
+  notify:
+    - restart tomcat
+
+- name: perform healthcheck
+  shell: "curl -sIk http://{{ domain_name }}/sample/ | head -1 | awk '{print $2}'"
+  register: dep_out
+- debug:
+    msg: The deployment was successful.
+  when: "{{ dep_out.stdout }} == 200"

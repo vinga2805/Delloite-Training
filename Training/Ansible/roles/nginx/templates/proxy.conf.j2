@@ -1,0 +1,8 @@
+server {
+	listen {{ nginx_port }};
+	server_name {{ domain_name }};
+	root /usr/share/nginx/html;
+	location / {
+           proxy_pass http://localhost:8080;
+	}
+}
